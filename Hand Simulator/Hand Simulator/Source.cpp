@@ -12,21 +12,12 @@ enum { Palm_y, Palm_z, Last_b, Last_m, Last_t, Ring_b, Ring_m, Ring_t, Middle_b,
 int handShape = 0;
 int scene = 0;
 
-
 void change_angle(int angle, int delta, int minimum = 0, int maximum = 180) {
-	//arm_angles[angle] = (arm_angles[angle] + delta) % 360;
 	int tempAngle = (arm_angles[angle] + delta) % 360;
 	if (tempAngle >= minimum && tempAngle <= maximum)
 		arm_angles[angle] = tempAngle;
-
-	//arm_angles[angle] = max(arm_angles[angle], minimum);
-	//arm_angles[angle] = min(arm_angles[angle], maximum);
 }
 
-
-void createSphere() {
-	glutWireSphere(0.5f, 10, 10);
-}
 
 void drawstring(float x, float y, float z, const char *s) {
 	unsigned int i;
@@ -35,47 +26,92 @@ void drawstring(float x, float y, float z, const char *s) {
 	for (i = 0; i < strlen(s); i++)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
 }
+void drawstring2(float x, float y, float z, const char *s) {
+	unsigned int i;
+	glRasterPos2f(x, y);
 
+	for (i = 0; i < strlen(s); i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+}
 void FrontPage() {
-	int temp = 10;
+	float temp = 10;
+	//glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 	gluLookAt(0, 0.0, 20, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	
-//	glColor3f(1, 0, 0);
-//	glBegin(GL_POLYGON);
-//	glVertex2f(0, 0);
-//	glVertex2f(0, temp);
-//	glVertex2f(temp, temp);
-//	glVertex2f(temp, 0);
-//	glEnd();
-//
-//	/*glColor3f(0, 0, 1);
-//	drawstring(20.0, 90.0, 0.0, "NAME OF THE COLLEGE ");
-//	glColor3f(0.7, 0, 1);
-//	drawstring(21, 82, 0.0, "DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING");
-//	glColor3f(1, 0.5, 0);
-//	drawstring(38, 70, 0.0, "A MINI PROJECT ON");
-//	glColor3f(1, 0, 0);
-//	drawstring(40, 60, 0.0, "PROJECT TITLE");
-//	glColor3f(1, 0.5, 0);
-//	drawstring(20, 50, 0.0, "BY:");
-//	glColor3f(0.5, 0, 0.5);
-//	drawstring(10, 40, 0.0, "NAME FIRST           (USN)");
-//	drawstring(10, 34, 0.0, "NAME SECOND         (USN)");
-//	glColor3f(1, 0.5, 0);
-//	drawstring(68, 50, 0.0, "GUIDES:");
-//	glColor3f(0.5, 0.2, 0.2);
-//	drawstring(63, 40, 0.0, "GUIDE NAME FIRST");
-//	drawstring(63, 34, 0.0, "GUIDE NAME SECOND");
-//	glColor3f(1, 0.1, 1);
-//	drawstring(32, 10, 0.0, "PRESS ENTER TO START");
-//	glFlush();*/
-//
-//	glutSwapBuffers();
-//
+
+	/////Dark-grey Background/////
+	glColor3f(0.117, 0.117, 0.117);
+	glBegin(GL_POLYGON);
+	glVertex2f(-15, -15);
+	glVertex2f(-15, 15);
+	glVertex2f(15, 15);
+	glVertex2f(15, -15);
+	glEnd();
+
+	/////Light-grey Strip/////
+	glColor3f(0.360, 0.376, 0.380);
+	glBegin(GL_POLYGON);
+	glVertex2f(-15, 15);
+	glVertex2f(-15, 9);
+	glVertex2f(15, 9);
+	glVertex2f(15, 15);
+	glEnd();
+
+	/////Green Strip/////
+	glColor3f(0.207, 0.690, 0.427);
+	glBegin(GL_POLYGON);
+	glVertex2f(-15, 5);
+	glVertex2f(-15, 9);
+	glVertex2f(15, 9);
+	glVertex2f(15, 5);
+	glEnd();
+
+	/////Light-grey Bottom/////
+	glColor3f(0.360, 0.376, 0.380);
+	glBegin(GL_POLYGON);
+	glVertex2f(-15, -15);
+	glVertex2f(-15, -10);
+	glVertex2f(15, -10);
+	glVertex2f(15, -15);
+	glEnd();
+
+	/////Text part/////
+	{
+		glColor3f(0.117, 0.117, 0.117);
+		//glColor3f(0.207, 0.690, 0.427);
+		drawstring(-8, 10.8, 0.0, "College Name");
+		glColor3f(0.117, 0.117, 0.117);
+		drawstring(-4.5, 6.8, 0.0, "HAND SIMULATOR");
+
+		glColor3f(0.360, 0.376, 0.380);
+		drawstring(-8, 3, 0, "Project by :");
+
+		glColor3f(0.207, 0.690, 0.427);
+		drawstring2(-8, 2, 0, "     Name_1");
+		drawstring2(-4, 2, 0, "                                   USN_1");
+		drawstring2(-8, 1, 0, "     Name_2 ");
+		drawstring2(-4, 1, 0, "                                   USN_2");
+
+		glColor3f(0.360, 0.376, 0.380);
+		drawstring(-8, -2, 0, "Under the guidance of :");
+
+		glColor3f(0.207, 0.690, 0.427);
+		drawstring2(-8, -3, 0, "     Teacher");
+		drawstring2(-8, -4, 0, "     Post,");
+		drawstring2(-8, -5, 0, "     ___ dept");
+
+		glColor3f(0.117, 0.117, 0.117);
+		drawstring(-5.5, -12, 0.0, "PRESS ENTER TO START");
+	}
+	glutSwapBuffers();
+
 }
 
+
+void createSphere() {
+	glutWireSphere(0.5f, 10, 10);
+}
 void MainScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -383,14 +419,13 @@ void MainScene(void) {
 	glutSwapBuffers();
 }
 
-//void init()
-//{
-//	glClearColor(1.0, 0.5, 0.0, 0.0);
-//	//glClearColor(0.3, 0.0, 0.3, 0.0);
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
-//	gluOrtho2D(0, 10, 0, 10);
-//}
+
+void display() {
+	if (scene == 0)
+		FrontPage();
+	else
+		MainScene();
+}
 
 void reshape(GLsizei w, GLsizei h) {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -404,17 +439,6 @@ void reshape(GLsizei w, GLsizei h) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
-void display() {
-	if (scene == 0) {
-
-		FrontPage();
-	}
-	else {
-		MainScene();
-	}
-}
-
 
 void specialKeys(int key, int x, int y) {
 	GLfloat distanceDelta = 1.0, angleDelta = 5 * 3.14159 / 180.0;
@@ -530,14 +554,98 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 
 		//////////////////Change Scene//////////////////
-	case 'm':
+	case 13:
 		scene = 1;
+		break;
+
+		//////////////////Hand Gestures//////////////////
+	case '0':									/////Gesture 1: NaN/////
+		arm_angles[Last_b] = 5;
+		arm_angles[Last_m] = 10;
+		arm_angles[Last_t] = 5;
+
+		arm_angles[Ring_b] = 80;
+		arm_angles[Ring_m] = 90;
+		arm_angles[Ring_t] = 60;
+
+		arm_angles[Middle_b] = 80;
+		arm_angles[Middle_m] = 90;
+		arm_angles[Middle_t] = 60;
+
+		arm_angles[Index_b] = 5;
+		arm_angles[Index_m] = 10;
+		arm_angles[Index_t] = 5;
+
+		arm_angles[Thumb_b] = 80;
+		arm_angles[Thumb_t] = 80;
+		break;
+
+	case '7':									/////Gesture 2: ROCK/////
+		arm_angles[Last_b] = 90;
+		arm_angles[Last_m] = 100;
+		arm_angles[Last_t] = 80;
+
+		arm_angles[Ring_b] = 90;
+		arm_angles[Ring_m] = 100;
+		arm_angles[Ring_t] = 80;
+
+		arm_angles[Middle_b] = 90;
+		arm_angles[Middle_m] = 100;
+		arm_angles[Middle_t] = 80;
+
+		arm_angles[Index_b] = 90;
+		arm_angles[Index_m] = 100;
+		arm_angles[Index_t] = 80;
+
+		arm_angles[Thumb_b] = 60;
+		arm_angles[Thumb_t] = 100;
+		break;
+
+	case '8':									/////Gesture 2: PAPER/////
+		arm_angles[Last_b] = 0;
+		arm_angles[Last_m] = 0;
+		arm_angles[Last_t] = 0;
+
+		arm_angles[Ring_b] = 0;
+		arm_angles[Ring_m] = 0;
+		arm_angles[Ring_t] = 0;
+
+		arm_angles[Middle_b] = 0;
+		arm_angles[Middle_m] = 0;
+		arm_angles[Middle_t] = 0;
+
+		arm_angles[Index_b] = 0;
+		arm_angles[Index_m] = 0;
+		arm_angles[Index_t] = 0;
+
+		arm_angles[Thumb_b] = 0;
+		arm_angles[Thumb_t] = 0;
+		break;
+
+	case '9':									/////Gesture 2: SCISSOR/////
+		arm_angles[Last_b] = 60;
+		arm_angles[Last_m] = 90;
+		arm_angles[Last_t] = 80;
+
+		arm_angles[Ring_b] = 60;
+		arm_angles[Ring_m] = 90;
+		arm_angles[Ring_t] = 80;
+
+		arm_angles[Middle_b] = 5;
+		arm_angles[Middle_m] = 0;
+		arm_angles[Middle_t] = 0;
+
+		arm_angles[Index_b] = 5;
+		arm_angles[Index_m] = 0;
+		arm_angles[Index_t] = 0;
+
+		arm_angles[Thumb_b] = 80;
+		arm_angles[Thumb_t] = 100;
+		break;
 	}
 
 	glutPostRedisplay();
 }
-
-
 
 void Menu(int value) {
 	switch (value) {
@@ -559,14 +667,12 @@ void Menu(int value) {
 int main(int argc, char * argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	glutInitWindowSize(900, 900);
+	glutInitWindowSize(790, 790);
 	glutCreateWindow("Hand Simulation");
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutSpecialFunc(specialKeys);
 	glutKeyboardFunc(keyboard);
-
-	//Menu function
 
 	int sub1 = glutCreateMenu(Menu);
 	glutAddMenuEntry("Cuboidal", 1);
@@ -576,8 +682,6 @@ int main(int argc, char * argv[]) {
 
 	glutAddMenuEntry("Exit", 3);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-	////
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glutMainLoop();
