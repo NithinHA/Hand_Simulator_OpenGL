@@ -10,7 +10,9 @@ int arm_angles[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 enum { Palm_y, Palm_z, Last_b, Last_m, Last_t, Ring_b, Ring_m, Ring_t, Middle_b, Middle_m, Middle_t, Index_b, Index_m, Index_t, Thumb_b, Thumb_t };
 
 int handShape = 0;
+int showControls = 0;
 int scene = 0;
+
 
 void change_angle(int angle, int delta, int minimum = 0, int maximum = 180) {
 	int tempAngle = (arm_angles[angle] + delta) % 360;
@@ -21,7 +23,7 @@ void change_angle(int angle, int delta, int minimum = 0, int maximum = 180) {
 
 void drawstring(float x, float y, float z, const char *s) {
 	unsigned int i;
-	glRasterPos2f(x, y);
+	glRasterPos3f(x, y, z);
 
 	for (i = 0; i < strlen(s); i++)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
@@ -80,7 +82,7 @@ void FrontPage() {
 	{
 		glColor3f(0.117, 0.117, 0.117);
 		//glColor3f(0.207, 0.690, 0.427);
-		drawstring(-8, 10.8, 0.0, "College Name");
+		drawstring(-8, 10.8, 0.0, "Shri Madhwa Vadiraja Institute Of Technology");
 		glColor3f(0.117, 0.117, 0.117);
 		drawstring(-4.5, 6.8, 0.0, "HAND SIMULATOR");
 
@@ -88,18 +90,18 @@ void FrontPage() {
 		drawstring(-8, 3, 0, "Project by :");
 
 		glColor3f(0.207, 0.690, 0.427);
-		drawstring2(-8, 2, 0, "     Name_1");
-		drawstring2(-4, 2, 0, "                                   USN_1");
-		drawstring2(-8, 1, 0, "     Name_2 ");
-		drawstring2(-4, 1, 0, "                                   USN_2");
+		drawstring2(-8, 2, 0, "     Nithin H A");
+		drawstring2(-4, 2, 0, "                                   4MW15CS058");
+		drawstring2(-8, 1, 0, "     Nahush Shetty ");
+		drawstring2(-4, 1, 0, "                                   4MW15CS048");
 
 		glColor3f(0.360, 0.376, 0.380);
 		drawstring(-8, -2, 0, "Under the guidance of :");
 
 		glColor3f(0.207, 0.690, 0.427);
-		drawstring2(-8, -3, 0, "     Teacher");
-		drawstring2(-8, -4, 0, "     Post,");
-		drawstring2(-8, -5, 0, "     ___ dept");
+		drawstring2(-8, -3, 0, "     Mr. B N Ramachandra");
+		drawstring2(-8, -4, 0, "     Assistant Professor,");
+		drawstring2(-8, -5, 0, "     CSE dept");
 
 		glColor3f(0.117, 0.117, 0.117);
 		drawstring(-5.5, -12, 0.0, "PRESS ENTER TO START");
@@ -108,9 +110,43 @@ void FrontPage() {
 
 }
 
-
 void createSphere() {
 	glutWireSphere(0.5f, 10, 10);
+}
+void controls() {
+	glColor3f(1, 1, 1);
+
+
+	/////last/////
+	drawstring(6.5, 0, 1.7, "Q");
+	drawstring(5, 0, 1.7, "A");
+	drawstring(3, 0, 1.7, "Z");
+	/////ring/////
+	drawstring(6.5, 0, 0.7, "W");
+	drawstring(5, 0, 0.7, "S");
+	drawstring(3, 0, 0.7, "X");
+	/////middle/////
+	drawstring(6.5, 0, -0.3, "E");
+	drawstring(5, 0, -0.3, "D");
+	drawstring(3, 0, -0.3, "C");
+	/////index/////
+	drawstring(6.5, 0, -1.3, "R");
+	drawstring(5, 0, -1.3, "F");
+	drawstring(3, 0, -1.3, "V");
+	/////thumb/////
+	drawstring(0.8, 0, -2.8, "G");
+	drawstring(0.8, 0, -4.8, "B");
+}
+void drawControl(float x, float y, float z, const char *s) {
+	unsigned int i;
+	glRasterPos3f(x, y, z);
+
+	for (i = 0; i < strlen(s); i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, s[i]);
+}
+void controlDisplay(const char *str) {
+	glColor3f(1, 1, 1);
+	drawControl(0, 0, 0, str);
 }
 void MainScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -123,9 +159,15 @@ void MainScene(void) {
 	{
 		glPushMatrix();
 
+		/*if (showControls == 1)
+		controls();*/
+
 		glRotatef((GLfloat)arm_angles[Palm_y], 0., 1., 0.);						//For palm rotation
 		glRotatef((GLfloat)arm_angles[Palm_z], 0., 0., 1.);						//For palm rotation
 		glTranslatef(1., 0., 0.);
+
+		/*if (showControls == 1)
+		controls();*/
 
 		/////PALM/////
 		glPushMatrix();
@@ -150,6 +192,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Last_b], 0., 0., 1.);					//rotate bottom part of last finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("Z");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -166,6 +212,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Last_m], 0., 0., 1.);					//rotate middle part of last finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("A");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -181,6 +231,10 @@ void MainScene(void) {
 			glTranslatef(0.85, 0., 0.);
 			glRotatef((GLfloat)arm_angles[Last_t], 0., 0., 1.);					//rotate top part of last finger
 			glTranslatef(0.85, 0., 0.);
+
+			if (showControls == 1) {
+				controlDisplay("Q");
+			}
 
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
@@ -204,6 +258,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Ring_b], 0., 0., 1.);					//rotate bottom part of ring finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("X");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -220,6 +278,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Ring_m], 0., 0., 1.);					//rotate middle part of ring finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("S");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -235,6 +297,10 @@ void MainScene(void) {
 			glTranslatef(0.85, 0., 0.);
 			glRotatef((GLfloat)arm_angles[Ring_t], 0., 0., 1.);					//rotate top part of ring finger
 			glTranslatef(0.85, 0., 0.);
+
+			if (showControls == 1) {
+				controlDisplay("W");
+			}
 
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
@@ -258,6 +324,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Middle_b], 0., 0., 1.);				//rotate bottom part of middle finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("C");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -274,6 +344,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Middle_m], 0., 0., 1.);				//rotate middle part of middle finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("D");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -289,6 +363,10 @@ void MainScene(void) {
 			glTranslatef(0.85, 0., 0.);
 			glRotatef((GLfloat)arm_angles[Middle_t], 0., 0., 1.);				//rotate top part of middle finger
 			glTranslatef(0.85, 0., 0.);
+
+			if (showControls == 1) {
+				controlDisplay("E");
+			}
 
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
@@ -315,6 +393,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Index_b], 0., 0., 1.);				//rotate bottom part of index finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("V");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -331,6 +413,10 @@ void MainScene(void) {
 			glRotatef((GLfloat)arm_angles[Index_m], 0., 0., 1.);				//rotate middle part of index finger
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("F");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(2, 1, 1);
@@ -346,6 +432,10 @@ void MainScene(void) {
 			glTranslatef(0.85, 0., 0.);
 			glRotatef((GLfloat)arm_angles[Index_t], 0., 0., 1.);				//rotate top part of index finger
 			glTranslatef(0.85, 0., 0.);
+
+			if (showControls == 1) {
+				controlDisplay("R");
+			}
 
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
@@ -378,6 +468,10 @@ void MainScene(void) {
 
 			glTranslatef(1., 0., 0.);
 
+			if (showControls == 1) {
+				controlDisplay("B");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(1.5, 1, 1);
@@ -398,6 +492,11 @@ void MainScene(void) {
 				glRotatef((GLfloat)arm_angles[Thumb_t], 0., 0., 1.);				//rotate top part of thumb
 			}
 			glTranslatef(1., 0., 0.);
+
+			if (showControls == 1) {
+				controlDisplay("G");
+			}
+
 			glPushMatrix();
 			if (handShape == 1)										/////SHAPE CHECK/////
 				glScalef(1.5, 1, 1);
@@ -419,14 +518,6 @@ void MainScene(void) {
 	glutSwapBuffers();
 }
 
-
-void display() {
-	if (scene == 0)
-		FrontPage();
-	else
-		MainScene();
-}
-
 void reshape(GLsizei w, GLsizei h) {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glViewport(0, 0, w, h);
@@ -438,6 +529,15 @@ void reshape(GLsizei w, GLsizei h) {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void display() {
+	if (scene == 0)
+		FrontPage();
+	else {
+		MainScene();
+
+	}
 }
 
 void specialKeys(int key, int x, int y) {
@@ -558,6 +658,15 @@ void keyboard(unsigned char key, int x, int y) {
 		scene = 1;
 		break;
 
+
+		//////////////////Show Controls//////////////////
+	case 32:
+		if (showControls == 0)
+			showControls = 1;
+		else
+			showControls = 0;
+		break;
+
 		//////////////////Hand Gestures//////////////////
 	case '0':									/////Gesture 1: NaN/////
 		arm_angles[Last_b] = 5;
@@ -647,6 +756,8 @@ void keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
+
+
 void Menu(int value) {
 	switch (value) {
 	case 1:
@@ -664,7 +775,7 @@ void Menu(int value) {
 }
 
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(790, 790);
